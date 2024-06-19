@@ -9,6 +9,11 @@ public class UserServices(IUserRepository userRepository, AuthService authServic
     private readonly AuthService _authService = authServices;
     public async Task<User> CreateUser(User user)
     {
+        var userExist = await _userRepository.GetUserByEmailAsync(user.Email!);
+        if (userExist != null)
+        {
+            throw new Exception("Email ja cadastrado");
+        }
         var hashedPassword = HashPassword(user.Password ?? string.Empty);
 
         var newUser = new User()
@@ -33,30 +38,38 @@ public class UserServices(IUserRepository userRepository, AuthService authServic
 
     public async Task<object> LoginUser(string email, string password)
     {
-        var user = await _userRepository.LoginUserAsync(email);
-        var token = _authService.GenerateTokenJwt(user);
-        var isAuth = VerifyPasswordMatch(password, user.Password ?? string.Empty);
-
-        if (!isAuth)
+        try
         {
-            throw new Exception("Credenciais inválidas");
+            var user = await _userRepository.GetUserByEmailAsync(email);
+            var token = _authService.GenerateTokenJwt(user);
+            var isAuth = VerifyPasswordMatch(password, user.Password ?? string.Empty);
+
+            if (!isAuth)
+            {
+                throw new Exception("Credenciais inválidas");
+            }
+
+            var userWhitOutPassword = new User()
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                Address = user.Address,
+                CreatedAt = user.CreatedAt,
+                UpdateAt = user.UpdateAt
+            };
+
+            return new
+            {
+                user = userWhitOutPassword,
+                token
+            };
         }
-
-        var userWhitOutPassword = new User()
+        catch (Exception exception)
         {
-            Id = user.Id,
-            Name = user.Name,
-            Email = user.Email,
-            Address = user.Address,
-            CreatedAt = user.CreatedAt,
-            UpdateAt = user.UpdateAt
-        };
-
-        return new
-        {
-            user = userWhitOutPassword,
-            token
-        };
+            return exception.Message;
+        }
+        
     }
 
     private static string HashPassword(string password)
