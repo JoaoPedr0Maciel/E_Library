@@ -23,12 +23,12 @@ public class UserRepository(AppDbContext appDbContext) : IUserRepository
         return user;
     }
 
-    public async Task GetAllUsers()
+    public async Task GetAllUsersAsync()
     {
         await appDbContext.Users.ToListAsync();
     }
 
-    public async Task DeleteUser(int id)
+    public async Task DeleteUserAsync(int id)
     {
         var user = await appDbContext.Users.FindAsync(id);
         if (user != null)
@@ -39,8 +39,20 @@ public class UserRepository(AppDbContext appDbContext) : IUserRepository
         
     }
 
-    public async Task GetUserById(int id)
+    public async Task GetUserByIdAsync(int id)
     {
         await appDbContext.Users.FirstOrDefaultAsync(user => user.Id == id);
+    }
+
+    public async Task<User> LoginUserAsync(string email)
+    {
+        var user = await appDbContext.Users.Where(user => user.Email == email).FirstOrDefaultAsync();
+
+        if (user == null)
+        {
+            throw new Exception("Email não cadastrado");
+        }
+
+        return user;
     }
 }

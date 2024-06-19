@@ -12,6 +12,7 @@ builder.Services.AddDbContext<AppDbContext>();
 builder.Services.AddControllers();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<UserServices>();
+builder.Services.AddTransient<AuthService>();
 
 var app = builder.Build();
 
