@@ -5,7 +5,7 @@ namespace E_Library.Domain.Repositories;
 public interface IBookRepository
 {
     Task<Book> CreateBookAsync(Book book);
-    Task GetAllBooksAsync();
-    Task DeleteBookAsync(int id);
-    Task GetBookById(int id);
+    Task<List<Book>> GetAllBooksAsync();
+    Task DeleteBookAsync(Book book);
+    Task<Book?> GetBookById(int id);
 }

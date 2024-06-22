@@ -4,29 +4,35 @@ using Microsoft.EntityFrameworkCore;
 
 namespace E_Library.Infrastructure.Repositories;
 
-public class BookRepository(AppDbContext appDbContext) : IBookRepository
+public class BookRepository: IBookRepository
 {
-    
-    
+
+    private readonly AppDbContext _appDbContext;
+
+    public BookRepository(AppDbContext appDbContext)
+    {
+        _appDbContext = appDbContext;
+    }
     public async Task<Book> CreateBookAsync(Book book)
     {
-        await appDbContext.Books.AddAsync(book);
-        await appDbContext.SaveChangesAsync();
+        await _appDbContext.Books.AddAsync(book);
+        await _appDbContext.SaveChangesAsync();
         return book;
     }
 
-    public Task GetAllBooksAsync()
+    public async Task<List<Book>> GetAllBooksAsync()
     {
-        throw new NotImplementedException();
+        return await _appDbContext.Books.ToListAsync();
     }
 
-    public Task DeleteBookAsync(int id)
+    public async Task DeleteBookAsync(Book book)
     {
-        throw new NotImplementedException();
+        _appDbContext.Books.Remove(book);
+        await _appDbContext.SaveChangesAsync();
     }
 
-    public Task GetBookById(int id)
+    public async Task<Book?> GetBookById(int id)
     {
-        throw new NotImplementedException();
+        return await _appDbContext.Books.Where(bk => bk.Id == id).FirstOrDefaultAsync();
     }
 }

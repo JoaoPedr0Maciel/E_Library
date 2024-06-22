@@ -6,33 +6,58 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace E_Library.Infrastructure.Repositories;
 
-public class UserRepository(AppDbContext appDbContext) : IUserRepository
+public class UserRepository : IUserRepository
 {
+    private readonly AppDbContext _appDbContext;
+
+    public UserRepository(AppDbContext appDbContext)
+    {
+        _appDbContext = appDbContext;
+    }
     public async Task<User> CreateUserAsync(User user)
     {
-        await appDbContext.Users.AddAsync(user);
-        await appDbContext.SaveChangesAsync();
+        await _appDbContext.Users.AddAsync(user);
+        await _appDbContext.SaveChangesAsync();
         return user;
     }
 
-    public async Task GetAllUsersAsync()
+    public async Task<List<User>> GetAllUsersAsync()
     {
-        await appDbContext.Users.ToListAsync();
+        // return users without password
+        return await _appDbContext.Users.Select(user => new User
+        {
+            Id = user.Id,
+            Name = user.Name,
+            Email = user.Email,
+            Address = user.Address,
+            CreatedAt = user.CreatedAt,
+            UpdateAt = user.UpdateAt
+        }).ToListAsync();
     }
 
-    public async Task  DeleteUserAsync(int id)
+    public async Task DeleteUserAsync(User user)
     {
-        await appDbContext.Users.FindAsync(id);
+        _appDbContext.Users.Remove(user);
+        await _appDbContext.SaveChangesAsync();
     }
 
     public async Task<User?> GetUserByIdAsync(int id)
     { 
-       return await appDbContext.Users.FirstOrDefaultAsync(user => user.Id == id);
+       return await _appDbContext.Users.FirstOrDefaultAsync(user => user.Id == id);
        
     }
 
     public async Task<User?> GetUserByEmailAsync(string email)
     {
-        return await appDbContext.Users.Where(user => user.Email == email).FirstOrDefaultAsync();
+        return await _appDbContext.Users.Where(user => user.Email == email).FirstOrDefaultAsync();
     }
+
+    public async Task<User> UpdateUserAsync(User user)
+    {
+         _appDbContext.Users.Update(user);
+         await _appDbContext.SaveChangesAsync();
+
+         return user;
+    }
+    
 }

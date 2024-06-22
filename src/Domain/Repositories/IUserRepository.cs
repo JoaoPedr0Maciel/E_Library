@@ -6,8 +6,9 @@ namespace E_Library.Domain.Repositories;
 public interface IUserRepository
 {
     Task<User> CreateUserAsync(User user);
-    Task GetAllUsersAsync();
-    Task DeleteUserAsync(int id);
+    Task<List<User>> GetAllUsersAsync();
+    Task DeleteUserAsync(User user);
     Task<User?> GetUserByIdAsync(int id);
     Task<User?> GetUserByEmailAsync(string email);
+    Task<User> UpdateUserAsync(User user);
 }

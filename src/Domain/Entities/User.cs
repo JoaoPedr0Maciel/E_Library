@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using E_Library.Dtos;
 
 namespace E_Library.Domain.Entities;
 
@@ -15,4 +16,5 @@ public class User
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime UpdateAt { get; set; } = DateTime.Now;
+    
 }

@@ -5,12 +5,16 @@ using E_Library.Domain.Entities;
 using E_Library.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
 
-namespace E_Library.Application.Services;
+namespace E_Library.Application.Services.Authentication;
 
-public class AuthService
+public class JwtServices
 {
     public string GenerateTokenJwt(User user)
     {
+        if (user == null)
+        {
+            throw new Exception("Usuário null");
+        }
         var handler = new JwtSecurityTokenHandler();
         var key = Encoding.UTF8.GetBytes(ConfigurationJwtSecret.Key);
         
