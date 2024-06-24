@@ -29,7 +29,6 @@ public class UserRepository : IUserRepository
             Id = user.Id,
             Name = user.Name,
             Email = user.Email,
-            Address = user.Address,
             CreatedAt = user.CreatedAt,
             UpdateAt = user.UpdateAt
         }).ToListAsync();

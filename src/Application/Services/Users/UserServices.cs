@@ -33,7 +33,6 @@ public class UserServices
             Name = user.Name,
             Email = user.Email,
             Password = hashedPassword,
-            Address = user.Address,
         };
 
         try
@@ -68,7 +67,6 @@ public class UserServices
             Id = user.Id,
             Name = user.Name,
             Email = user.Email,
-            Address = user.Address,
             CreatedAt = user.CreatedAt,
             UpdateAt = user.UpdateAt
         };
@@ -113,7 +111,6 @@ public class UserServices
         userExist.Name = user.Name;
         userExist.Email = user.Email;
         userExist.Password = _passwordServices.HashPassword(user.Password!);
-        userExist.Address = user.Address;
 
         try
         {

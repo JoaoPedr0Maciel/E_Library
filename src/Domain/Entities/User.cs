@@ -12,8 +12,6 @@ public class User
     public string? Name { get; set; }
     public string? Email { get; set; }
     public string? Password { get; set; }
-    public string? Address { get; set; }
-
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime UpdateAt { get; set; } = DateTime.Now;
     

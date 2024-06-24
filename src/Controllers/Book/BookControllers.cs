@@ -33,4 +33,11 @@ public class BookControllers : ControllerBase
         var books = await _bookServices.GetAllBooksAsync();
         return Ok(books);
     }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetBookByIdAsync([FromRoute] int id)
+    {
+        var book = await _bookServices.GetBookById(id);
+        return Ok(book);
+    }
 }

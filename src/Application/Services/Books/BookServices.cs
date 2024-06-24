@@ -16,13 +16,6 @@ public class BookServices
 
     public async Task<Book> CreateBookAsync(BookDto bookDto)
     {
-        // var bookExist = await _bookRepository.GetBookById(bookDto.Id);
-        //
-        // if (bookExist != null)
-        // {
-        //     throw new Exception("Livro ja cadastrado");
-        // }
-
         var newBook = new Book()
         {
             Title = bookDto.Title,
@@ -52,9 +45,22 @@ public class BookServices
            var books = await _bookRepository.GetAllBooksAsync();
            return books;
         }
-        catch (Exception e)
+        catch (Exception exception)
         {
-            throw new Exception("Erro ao buscar livros");
+            throw new Exception("Erro ao buscar livros", exception);
+        }
+    }
+
+    public async Task<Book> GetBookById(int id)
+    {
+        try
+        {
+            var book = await _bookRepository.GetBookById(id) ?? throw new Exception("Livro não encontrado");
+            return book;
+        }
+        catch (Exception exception)
+        {
+            throw new Exception("Erro ao buscar livro", exception);
         }
     }
 }

@@ -30,7 +30,6 @@ public class UserControllers: ControllerBase
             Name = userData.Name,
             Email = userData.Email,
             Password = userData.Password,
-            Address = userData.Address,
         };
 
         try
